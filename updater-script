@@ -1,0 +1,90 @@
+ui_print("Target: nubia/NX659J/NX659J:10/QKQ1.200405.002/nubia.20201101.042008:user/release-keys");
+show_progress(0.650000, 0);
+
+# --- Start patching dynamic partitions ---
+
+
+# Update dynamic partition metadata
+
+assert(update_dynamic_partitions(package_extract_file("dynamic_partitions_op_list")));
+
+# Patch partition product
+
+unmap_partition("product");
+ui_print("Patching product image unconditionally...");
+block_image_update(map_partition("product"), package_extract_file("product.transfer.list"), "product.new.dat.br", "product.patch.dat") ||
+  abort("E2001: Failed to update product image.");
+
+# Patch partition vendor
+
+unmap_partition("vendor");
+ui_print("Patching vendor image unconditionally...");
+show_progress(0.100000, 0);
+block_image_update(map_partition("vendor"), package_extract_file("vendor.transfer.list"), "vendor.new.dat.br", "vendor.patch.dat") ||
+  abort("E2001: Failed to update vendor image.");
+
+# Patch partition system
+
+unmap_partition("system");
+ui_print("Patching system image unconditionally...");
+block_image_update(map_partition("system"), package_extract_file("system.transfer.list"), "system.new.dat.br", "system.patch.dat") ||
+  abort("E1001: Failed to update system image.");
+
+# Patch partition odm
+
+unmap_partition("odm");
+ui_print("Patching odm image unconditionally...");
+block_image_update(map_partition("odm"), package_extract_file("odm.transfer.list"), "odm.new.dat.br", "odm.patch.dat") ||
+  abort("E2001: Failed to update odm image.");
+
+# --- End patching dynamic partitions ---
+
+show_progress(0.050000, 5);
+package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
+show_progress(0.200000, 10);
+ui_print("Writing radio image...");
+ui_print("update image tz.mbn ...");
+package_extract_file("tz.mbn", "/dev/block/bootdevice/by-name/tz");
+ui_print("update image xbl.elf ...");
+package_extract_file("xbl.elf", "/dev/block/bootdevice/by-name/xbl");
+ui_print("update image hyp.mbn ...");
+package_extract_file("hyp.mbn", "/dev/block/bootdevice/by-name/hyp");
+ui_print("update image NON-HLOS.bin ...");
+package_extract_file("NON-HLOS.bin", "/dev/block/bootdevice/by-name/modem");
+ui_print("update image cmnlib.mbn ...");
+package_extract_file("cmnlib.mbn", "/dev/block/bootdevice/by-name/cmnlib");
+ui_print("update image dspso.bin ...");
+package_extract_file("dspso.bin", "/dev/block/bootdevice/by-name/dsp");
+ui_print("update image qupv3fw.elf ...");
+package_extract_file("qupv3fw.elf", "/dev/block/bootdevice/by-name/qupfw");
+ui_print("update image km4.mbn ...");
+package_extract_file("km4.mbn", "/dev/block/bootdevice/by-name/keymaster");
+ui_print("update image BTFM.bin ...");
+package_extract_file("BTFM.bin", "/dev/block/bootdevice/by-name/bluetooth");
+ui_print("update image xbl_config.elf ...");
+package_extract_file("xbl_config.elf", "/dev/block/bootdevice/by-name/xbl_config");
+ui_print("update image aop.mbn ...");
+package_extract_file("aop.mbn", "/dev/block/bootdevice/by-name/aop");
+ui_print("update image abl.elf ...");
+package_extract_file("abl.elf", "/dev/block/bootdevice/by-name/abl");
+ui_print("update image cmnlib64.mbn ...");
+package_extract_file("cmnlib64.mbn", "/dev/block/bootdevice/by-name/cmnlib64");
+ui_print("update image devcfg.mbn ...");
+package_extract_file("devcfg.mbn", "/dev/block/bootdevice/by-name/devcfg");
+ui_print("update image uefi_sec.mbn ...");
+package_extract_file("uefi_sec.mbn", "/dev/block/bootdevice/by-name/uefisecapp");
+ui_print("update image splash.img ...");
+package_extract_file("splash.img", "/dev/block/bootdevice/by-name/splash");
+ui_print("update image parameter.img ...");
+package_extract_file("parameter.img", "/dev/block/bootdevice/by-name/parameter");
+ui_print("update image imagefv.elf ...");
+package_extract_file("imagefv.elf", "/dev/block/bootdevice/by-name/ImageFv");
+ui_print("start update dtbo.img");
+package_extract_file("dtbo.img", "/dev/block/bootdevice/by-name/dtbo");
+ui_print("start update vbmeta.img");
+package_extract_file("vbmeta.img", "/dev/block/bootdevice/by-name/vbmeta");
+ui_print("start update vbmeta_system.img");
+package_extract_file("vbmeta_system.img", "/dev/block/bootdevice/by-name/vbmeta_system");
+ui_print("start update recovery2");
+package_extract_file("recovery.img", "/dev/block/bootdevice/by-name/recovery2");
+set_progress(1.000000);
